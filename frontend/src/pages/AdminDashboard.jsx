@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link ,useNavigate} from "react-router-dom";
+import API_URI from "../config"
 
 
 
@@ -158,7 +159,7 @@ if (!token) {
   throw new Error("Please log in as an admin first.");
 }
 
-const response = await fetch("http://localhost:5000/api/kavus", {
+const response = await fetch(`${API_URI}/kavus`, {
   method: "POST",
   headers: {
     "Content-Type": "application/json",

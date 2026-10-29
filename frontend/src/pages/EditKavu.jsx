@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-
-const API_URL = "http://localhost:5000/api/kavus";
+import API_URL from "../config";
 
 const districts = [
   "Kannur",

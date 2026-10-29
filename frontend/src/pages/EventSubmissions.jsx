@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../config";
+  
 
-const API_URL = "http://localhost:5000/api/event-submissions";
+
+const SUBMISSIONS_URL = `${API_URL}/api/event-submissions`;
 
 function EventSubmissions() {
   const [submissions, setSubmissions] = useState([]);
@@ -63,7 +66,7 @@ function EventSubmissions() {
       const token = localStorage.getItem("adminToken");
 
       const response = await fetch(
-        `${API_URL}/${submission._id}/${action}`,
+        `${SUBMISSIONS_URL}/${submission._id}/${action}`,
         {
           method: "PATCH",
           headers: {

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import API_URL from "../config";
 
-const API_URL = "http://localhost:5000/api/kavus";
+const KAVUS_URL = `${API_URL}/api/kavus`;
 
 function ManageKavus() {
   const [kavus, setKavus] = useState([]);

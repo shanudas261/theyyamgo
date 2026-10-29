@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import API_URL from "../config";
+
+const KAVUS_URL = `${API_URL}/api/kavus`;
 
 function KavuDetails() {
   const { id } = useParams();
@@ -15,7 +18,7 @@ function KavuDetails() {
         setError("");
 
         const response = await fetch(
-          `http://localhost:5000/api/kavus/${id}`
+          `${KAVUS_URL}/${id}`
         );
 
         const result = await response.json();
