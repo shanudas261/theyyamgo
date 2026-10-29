@@ -17,22 +17,25 @@ const ALLOWED_DISTRICTS = [
 function extractCoordinates(url) {
   try {
     const parsedUrl = new URL(url);
-
     const hostname = parsedUrl.hostname.toLowerCase();
 
     const isGoogleMaps =
       hostname === "google.com" ||
       hostname.endsWith(".google.com") ||
-      hostname === "maps.app.goo.gl" ||
-      hostname === "goo.gl";
+      hostname === "google.co.in" ||
+      hostname.endsWith(".google.co.in");
 
-    if (!isGoogleMaps) {
+    if (
+      !isGoogleMaps ||
+      !["http:", "https:"].includes(parsedUrl.protocol)
+    ) {
       return null;
     }
 
     const patterns = [
       /@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/,
       /[?&](?:q|query|ll)=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/,
+      /!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/,
     ];
 
     for (const pattern of patterns) {
@@ -43,6 +46,8 @@ function extractCoordinates(url) {
         const longitude = Number(match[2]);
 
         if (
+          Number.isFinite(latitude) &&
+          Number.isFinite(longitude) &&
           latitude >= -90 &&
           latitude <= 90 &&
           longitude >= -180 &&
@@ -51,14 +56,13 @@ function extractCoordinates(url) {
           return { latitude, longitude };
         }
       }
-    }
+    }  
 
     return null;
   } catch {
     return null;
   }
 }
-
 // POST /api/event-submissions
 // Public API: visitors can submit events for review.
 router.post("/", async (req, res) => {

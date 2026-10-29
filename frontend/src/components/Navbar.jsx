@@ -62,13 +62,11 @@ function Navbar() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          result.message || "Unable to submit the event."
-        );
+        throw new Error(result.message || "Unable to submit the event.");
       }
 
       setMessage(
-        "Event submitted successfully! It will appear on the map only after verification."
+        "Event submitted successfully! It will appear on the map only after verification.",
       );
 
       setMessageType("success");
@@ -79,7 +77,7 @@ function Navbar() {
       setMessage(
         error.message === "Failed to fetch"
           ? "Cannot connect to the server. Please check whether the backend is running."
-          : error.message || "Something went wrong. Please try again."
+          : error.message || "Something went wrong. Please try again.",
       );
 
       setMessageType("error");
@@ -96,15 +94,24 @@ function Navbar() {
         </div>
 
         <nav className="hidden items-center gap-8 text-sm font-medium md:flex">
-          <a href="#" className="text-red-500">
+          <a
+            href="#explore"
+            className="text-red-500 transition hover:text-red-400"
+          >
             Map
           </a>
 
-          <a href="#" className="text-gray-300 hover:text-red-500">
+          <a
+            href="#theyyam-info"
+            className="text-gray-300 transition hover:text-red-500"
+          >
             Theyyam Info
           </a>
 
-          <a href="#" className="text-gray-300 hover:text-red-500">
+          <a
+            href="#about"
+            className="text-gray-300 transition hover:text-red-500"
+          >
             About
           </a>
         </nav>
@@ -147,8 +154,8 @@ function Navbar() {
             </h2>
 
             <p className="mb-6 text-sm text-gray-400">
-              Share event details with us. Every submission is
-              verified before publication.
+              Share event details with us. Every submission is verified before
+              publication.
             </p>
 
             {message && (
