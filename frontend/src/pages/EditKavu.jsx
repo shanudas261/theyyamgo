@@ -2,13 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import API_URL from "../config";
 
-const districts = [
-  "Kannur",
-  "Kasaragod",
-  "Kozhikode",
-  "Wayanad",
-  "Malappuram",
-];
+const districts = ["Kannur", "Kasaragod", "Kozhikode", "Wayanad", "Malappuram"];
 
 function EditKavu() {
   const { id } = useParams();
@@ -31,7 +25,7 @@ function EditKavu() {
   useEffect(() => {
     async function loadKavu() {
       try {
-        const response = await fetch(`${API_URL}/${id}`);
+        const response = await fetch(`${API_URL}/api/${id}`);
         const result = await response.json();
 
         if (!response.ok) {
@@ -51,9 +45,7 @@ function EditKavu() {
             date: event.date
               ? new Date(event.date).toISOString().slice(0, 10)
               : "",
-            theyyams: Array.isArray(event.theyyams)
-              ? [...event.theyyams]
-              : [],
+            theyyams: Array.isArray(event.theyyams) ? [...event.theyyams] : [],
           })),
         });
       } catch (err) {
@@ -79,9 +71,7 @@ function EditKavu() {
     setForm((previous) => ({
       ...previous,
       events: previous.events.map((event, eventIndex) =>
-        eventIndex === index
-          ? { ...event, [field]: value }
-          : event
+        eventIndex === index ? { ...event, [field]: value } : event,
       ),
     }));
   }
@@ -94,10 +84,10 @@ function EditKavu() {
           ? {
               ...event,
               theyyams: event.theyyams.map((name, index2) =>
-                index2 === theyyamIndex ? value : name
+                index2 === theyyamIndex ? value : name,
               ),
             }
-          : event
+          : event,
       ),
     }));
   }
@@ -119,9 +109,7 @@ function EditKavu() {
   function removeEvent(index) {
     setForm((previous) => ({
       ...previous,
-      events: previous.events.filter(
-        (_, eventIndex) => eventIndex !== index
-      ),
+      events: previous.events.filter((_, eventIndex) => eventIndex !== index),
     }));
   }
 
@@ -134,7 +122,7 @@ function EditKavu() {
               ...event,
               theyyams: [...event.theyyams, ""],
             }
-          : event
+          : event,
       ),
     }));
   }
@@ -147,10 +135,10 @@ function EditKavu() {
           ? {
               ...event,
               theyyams: event.theyyams.filter(
-                (_, index2) => index2 !== theyyamIndex
+                (_, index2) => index2 !== theyyamIndex,
               ),
             }
-          : event
+          : event,
       ),
     }));
   }
@@ -194,11 +182,11 @@ function EditKavu() {
         (event) =>
           !event.festivalName.trim() ||
           !event.date ||
-          event.theyyams.some((name) => !name.trim())
+          event.theyyams.some((name) => !name.trim()),
       )
     ) {
       setError(
-        "Every festival needs a name and date. Remove empty Theyyam fields or fill them in."
+        "Every festival needs a name and date. Remove empty Theyyam fields or fill them in.",
       );
       return;
     }
@@ -220,7 +208,7 @@ function EditKavu() {
     setSaving(true);
 
     try {
-      const response = await fetch(`${API_URL}/${id}`, {
+      const response = await fetch(`${API_URL}/api/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -263,9 +251,7 @@ function EditKavu() {
             TheyyamGo Admin
           </p>
 
-          <h1 className="mt-2 text-3xl font-bold md:text-4xl">
-            Edit Kavu
-          </h1>
+          <h1 className="mt-2 text-3xl font-bold md:text-4xl">Edit Kavu</h1>
 
           <p className="mt-2 text-gray-400">
             Update the Kavu, festival, and Theyyam information.
@@ -315,9 +301,7 @@ function EditKavu() {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm text-gray-300">
-              District
-            </label>
+            <label className="mb-2 block text-sm text-gray-300">District</label>
             <select
               name="district"
               value={form.district}
@@ -388,9 +372,7 @@ function EditKavu() {
                 className="space-y-4 rounded-xl border border-gray-800 bg-black/40 p-4"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-semibold">
-                    Festival {eventIndex + 1}
-                  </h3>
+                  <h3 className="font-semibold">Festival {eventIndex + 1}</h3>
 
                   <button
                     type="button"
@@ -411,7 +393,7 @@ function EditKavu() {
                       handleEventChange(
                         eventIndex,
                         "festivalName",
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     required
@@ -427,11 +409,7 @@ function EditKavu() {
                     type="date"
                     value={event.date}
                     onChange={(e) =>
-                      handleEventChange(
-                        eventIndex,
-                        "date",
-                        e.target.value
-                      )
+                      handleEventChange(eventIndex, "date", e.target.value)
                     }
                     required
                     className="w-full rounded-lg border border-gray-700 bg-gray-950 px-3 py-2 outline-none focus:border-red-600"
@@ -444,17 +422,14 @@ function EditKavu() {
                   </h4>
 
                   {event.theyyams.map((theyyam, theyyamIndex) => (
-                    <div
-                      key={theyyamIndex}
-                      className="flex items-center gap-2"
-                    >
+                    <div key={theyyamIndex} className="flex items-center gap-2">
                       <input
                         value={theyyam}
                         onChange={(e) =>
                           handleTheyyamChange(
                             eventIndex,
                             theyyamIndex,
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         required
@@ -464,9 +439,7 @@ function EditKavu() {
 
                       <button
                         type="button"
-                        onClick={() =>
-                          removeTheyyam(eventIndex, theyyamIndex)
-                        }
+                        onClick={() => removeTheyyam(eventIndex, theyyamIndex)}
                         className="text-sm text-red-400 hover:text-red-300"
                       >
                         Remove
