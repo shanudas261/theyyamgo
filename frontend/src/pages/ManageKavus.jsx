@@ -10,14 +10,14 @@ function ManageKavus() {
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState("");
   const [search, setSearch] = useState("");
-const [selectedDistrict, setSelectedDistrict] = useState("All");
+  const [selectedDistrict, setSelectedDistrict] = useState("All");
 
   const fetchKavus = useCallback(async () => {
     setLoading(true);
     setError("");
 
     try {
-      const response = await fetch(API_URL);
+      const response = await fetch(KAVUS_URL);
       const result = await response.json();
 
       if (!response.ok) {
@@ -27,7 +27,7 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
       // Supports APIs returning either an array or { kavus: [...] }.
       const data = Array.isArray(result)
         ? result
-        : result.kavus ?? result.data;
+        : (result.kavus ?? result.data);
 
       if (!Array.isArray(data)) {
         throw new Error("Unexpected response from the server.");
@@ -46,20 +46,19 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
   }, [fetchKavus]);
 
   const filteredKavus = kavus.filter((kavu) => {
-  const matchesName = kavu.name
-    .toLowerCase()
-    .includes(search.trim().toLowerCase());
+    const matchesName = kavu.name
+      .toLowerCase()
+      .includes(search.trim().toLowerCase());
 
-  const matchesDistrict =
-    selectedDistrict === "All" ||
-    kavu.district === selectedDistrict;
+    const matchesDistrict =
+      selectedDistrict === "All" || kavu.district === selectedDistrict;
 
-  return matchesName && matchesDistrict;
-});
+    return matchesName && matchesDistrict;
+  });
 
   async function handleDelete(kavu) {
     const confirmed = window.confirm(
-      `Are you sure you want to delete "${kavu.name}" and all its events?`
+      `Are you sure you want to delete "${kavu.name}" and all its events?`,
     );
 
     if (!confirmed) return;
@@ -75,7 +74,7 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/${kavu._id}`, {
+      const response = await fetch(`${KAVUS_URL}/${kavu._id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -88,9 +87,7 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
         throw new Error(result.message || "Failed to delete Kavu.");
       }
 
-      setKavus((previous) =>
-        previous.filter((item) => item._id !== kavu._id)
-      );
+      setKavus((previous) => previous.filter((item) => item._id !== kavu._id));
     } catch (err) {
       setError(err.message || "Unable to delete Kavu.");
     } finally {
@@ -149,27 +146,27 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
             </button>
           </div>
           <div className="mb-5 grid gap-4 md:grid-cols-2">
-  <input
-    type="text"
-    value={search}
-    onChange={(event) => setSearch(event.target.value)}
-    placeholder="Search Kavu by name..."
-    className="w-full rounded-xl border border-gray-700 bg-gray-950 px-4 py-3 text-white outline-none focus:border-red-600"
-  />
+            <input
+              type="text"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search Kavu by name..."
+              className="w-full rounded-xl border border-gray-700 bg-gray-950 px-4 py-3 text-white outline-none focus:border-red-600"
+            />
 
-  <select
-    value={selectedDistrict}
-    onChange={(event) => setSelectedDistrict(event.target.value)}
-    className="w-full rounded-xl border border-gray-700 bg-gray-950 px-4 py-3 text-white outline-none focus:border-red-600"
-  >
-    <option value="All">All districts</option>
-    <option value="Kannur">Kannur</option>
-    <option value="Kasaragod">Kasaragod</option>
-    <option value="Kozhikode">Kozhikode</option>
-    <option value="Wayanad">Wayanad</option>
-    <option value="Malappuram">Malappuram</option>
-  </select>
-</div>
+            <select
+              value={selectedDistrict}
+              onChange={(event) => setSelectedDistrict(event.target.value)}
+              className="w-full rounded-xl border border-gray-700 bg-gray-950 px-4 py-3 text-white outline-none focus:border-red-600"
+            >
+              <option value="All">All districts</option>
+              <option value="Kannur">Kannur</option>
+              <option value="Kasaragod">Kasaragod</option>
+              <option value="Kozhikode">Kozhikode</option>
+              <option value="Wayanad">Wayanad</option>
+              <option value="Malappuram">Malappuram</option>
+            </select>
+          </div>
 
           {error && (
             <div
@@ -181,13 +178,11 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
           )}
 
           {loading ? (
-            <p className="py-8 text-center text-gray-400">
-              Loading Kavus...
-            </p>
+            <p className="py-8 text-center text-gray-400">Loading Kavus...</p>
           ) : filteredKavus.length === 0 ? (
             <p className="py-8 text-center text-gray-400">
-  No matching Kavus found. Try another name or district.
-</p>
+              No matching Kavus found. Try another name or district.
+            </p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[650px] text-left text-sm">
@@ -213,7 +208,7 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
                         (Array.isArray(event.theyyams)
                           ? event.theyyams.length
                           : 0),
-                      0
+                      0,
                     );
 
                     return (
@@ -221,21 +216,15 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
                         key={kavu._id}
                         className="border-b border-gray-900 transition hover:bg-red-950/10"
                       >
-                        <td className="px-4 py-4 font-semibold">
-                          {kavu.name}
-                        </td>
+                        <td className="px-4 py-4 font-semibold">{kavu.name}</td>
 
                         <td className="px-4 py-4 text-gray-300">
                           {kavu.district}
                         </td>
 
-                        <td className="px-4 py-4">
-                          {events.length}
-                        </td>
+                        <td className="px-4 py-4">{events.length}</td>
 
-                        <td className="px-4 py-4">
-                          {theyyamCount}
-                        </td>
+                        <td className="px-4 py-4">{theyyamCount}</td>
 
                         <td className="px-4 py-4">
                           <div className="flex gap-3">
@@ -246,11 +235,11 @@ const [selectedDistrict, setSelectedDistrict] = useState("All");
                               View
                             </Link>
                             <Link
-  to={`/admin/kavus/${kavu._id}/edit`}
-  className="text-yellow-400 hover:text-yellow-300"
->
-  Edit
-</Link>
+                              to={`/admin/kavus/${kavu._id}/edit`}
+                              className="text-yellow-400 hover:text-yellow-300"
+                            >
+                              Edit
+                            </Link>
 
                             <button
                               type="button"
