@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API_URI from "../config";
 
+const KAVUS_URL = `${API_URI}/api/kavus`;
+
 const initialEvent = {
   festivalName: "",
   date: "",
@@ -150,7 +152,7 @@ function AdminDashboard() {
         throw new Error("Please log in as an admin first.");
       }
 
-      const response = await fetch(`${API_URI}/api/kavus`, {
+      const response = await fetch(`${KAVUS_URL}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
