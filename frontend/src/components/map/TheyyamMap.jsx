@@ -12,6 +12,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import EventCard from "../Event/EventCard";
+import API_URL from "../../config";
 
 // Custom Theyyam marker
 const TheyyamIcon = L.divIcon({
@@ -40,14 +41,9 @@ function MapController({ kavus }) {
     if (kavus.length === 1) {
       const kavu = kavus[0];
 
-      map.flyTo(
-        [
-          kavu.location.latitude,
-          kavu.location.longitude,
-        ],
-        13,
-        { duration: 1 }
-      );
+      map.flyTo([kavu.location.latitude, kavu.location.longitude], 13, {
+        duration: 1,
+      });
 
       return;
     }
@@ -67,11 +63,7 @@ function MapController({ kavus }) {
   return null;
 }
 
-function TheyyamMap({
-  search,
-  dateFilter,
-  districtFilter,
-}) {
+function TheyyamMap({ search, dateFilter, districtFilter }) {
   const [selectedKavu, setSelectedKavu] = useState(null);
   const [kavus, setKavus] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -81,9 +73,7 @@ function TheyyamMap({
   useEffect(() => {
     async function fetchKavus() {
       try {
-        const response = await fetch(
-          "http://localhost:5000/api/kavus"
-        );
+        const response = await fetch(`${API_URL}/api/kavus`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch Kavus");
@@ -113,14 +103,13 @@ function TheyyamMap({
       kavu.district.toLowerCase().includes(searchText) ||
       kavu.events.some((event) =>
         event.theyyams.some((theyyam) =>
-          theyyam.toLowerCase().includes(searchText)
-        )
+          theyyam.toLowerCase().includes(searchText),
+        ),
       );
 
     // Filter by district
     const matchesDistrict =
-      districtFilter === "All districts" ||
-      kavu.district === districtFilter;
+      districtFilter === "All districts" || kavu.district === districtFilter;
 
     // Filter by date
     const matchesDate =
@@ -140,9 +129,7 @@ function TheyyamMap({
           const day = today.getDay();
 
           const monday = new Date(today);
-          monday.setDate(
-            today.getDate() - (day === 0 ? 6 : day - 1)
-          );
+          monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
 
           const sunday = new Date(monday);
           sunday.setDate(monday.getDate() + 6);
@@ -168,17 +155,11 @@ function TheyyamMap({
     <div className="mx-auto mt-6 w-full max-w-5xl">
       {/* Loading message */}
       {loading && (
-        <p className="mb-3 text-sm text-white">
-          Loading Theyyam locations...
-        </p>
+        <p className="mb-3 text-sm text-white">Loading Theyyam locations...</p>
       )}
 
       {/* Error message */}
-      {error && (
-        <p className="mb-3 text-sm text-red-500">
-          {error}
-        </p>
-      )}
+      {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
 
       {/* Results count */}
       {!loading && !error && (
@@ -190,14 +171,13 @@ function TheyyamMap({
 
       {/* Map */}
       <div className="relative h-[400px] w-full overflow-hidden rounded-2xl border-4 border-black shadow-2xl md:h-[450px] lg:h-[500px]">
-        
-  <MapContainer
-  center={[11.75, 75.3]}
-  zoom={8}
-  scrollWheelZoom={true}
-  className="h-full w-full"
->
-  <MapController kavus={filteredKavus} />
+        <MapContainer
+          center={[11.75, 75.3]}
+          zoom={8}
+          scrollWheelZoom={true}
+          className="h-full w-full"
+        >
+          <MapController kavus={filteredKavus} />
           <TileLayer
             attribution="&copy; OpenStreetMap contributors &copy; CARTO"
             url={`https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key=${import.meta.env.VITE_CARTO_API_KEY}`}
@@ -207,10 +187,7 @@ function TheyyamMap({
           {filteredKavus.map((kavu) => (
             <Marker
               key={kavu._id}
-              position={[
-                kavu.location.latitude,
-                kavu.location.longitude,
-              ]}
+              position={[kavu.location.latitude, kavu.location.longitude]}
               icon={TheyyamIcon}
               eventHandlers={{
                 click: () => setSelectedKavu(kavu),
