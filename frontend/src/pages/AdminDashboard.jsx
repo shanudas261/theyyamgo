@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { Link ,useNavigate} from "react-router-dom";
-import API_URI from "../config"
-
-
+import { Link, useNavigate } from "react-router-dom";
+import API_URI from "../config";
 
 const initialEvent = {
   festivalName: "",
@@ -11,21 +9,18 @@ const initialEvent = {
 };
 
 function AdminDashboard() {
-
   const navigate = useNavigate();
 
-function handleLogout() {
-  localStorage.removeItem("adminToken");
-  navigate("/admin/login", { replace: true });
-}
+  function handleLogout() {
+    localStorage.removeItem("adminToken");
+    navigate("/admin/login", { replace: true });
+  }
   const [name, setName] = useState("");
   const [district, setDistrict] = useState("Kannur");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
 
-  const [events, setEvents] = useState([
-    { ...initialEvent, theyyams: [""] },
-  ]);
+  const [events, setEvents] = useState([{ ...initialEvent, theyyams: [""] }]);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -35,10 +30,8 @@ function handleLogout() {
   function updateEvent(eventIndex, field, value) {
     setEvents((previousEvents) =>
       previousEvents.map((event, index) =>
-        index === eventIndex
-          ? { ...event, [field]: value }
-          : event
-      )
+        index === eventIndex ? { ...event, [field]: value } : event,
+      ),
     );
   }
 
@@ -53,7 +46,7 @@ function handleLogout() {
   // Remove a festival event
   function removeEvent(eventIndex) {
     setEvents((previousEvents) =>
-      previousEvents.filter((_, index) => index !== eventIndex)
+      previousEvents.filter((_, index) => index !== eventIndex),
     );
   }
 
@@ -66,8 +59,8 @@ function handleLogout() {
               ...event,
               theyyams: [...event.theyyams, ""],
             }
-          : event
-      )
+          : event,
+      ),
     );
   }
 
@@ -79,11 +72,11 @@ function handleLogout() {
           ? {
               ...event,
               theyyams: event.theyyams.map((name, index) =>
-                index === theyyamIndex ? value : name
+                index === theyyamIndex ? value : name,
               ),
             }
-          : event
-      )
+          : event,
+      ),
     );
   }
 
@@ -95,11 +88,11 @@ function handleLogout() {
           ? {
               ...event,
               theyyams: event.theyyams.filter(
-                (_, index) => index !== theyyamIndex
+                (_, index) => index !== theyyamIndex,
               ),
             }
-          : event
-      )
+          : event,
+      ),
     );
   }
 
@@ -135,9 +128,7 @@ function handleLogout() {
     const cleanedEvents = events.map((event) => ({
       festivalName: event.festivalName.trim(),
       date: event.date,
-      theyyams: event.theyyams
-        .map((name) => name.trim())
-        .filter(Boolean),
+      theyyams: event.theyyams.map((name) => name.trim()).filter(Boolean),
     }));
 
     const payload = {
@@ -155,18 +146,18 @@ function handleLogout() {
 
       const token = localStorage.getItem("adminToken");
 
-if (!token) {
-  throw new Error("Please log in as an admin first.");
-}
+      if (!token) {
+        throw new Error("Please log in as an admin first.");
+      }
 
-const response = await fetch(`${API_URI}/kavus`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify(payload),
-});
+      const response = await fetch(`${API_URI}/api/kavus`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
 
       const result = await response.json();
 
@@ -213,27 +204,27 @@ const response = await fetch(`${API_URI}/kavus`, {
           </div>
 
           <div className="flex shrink-0 gap-2">
-  <Link
-    to="/"
-    className="rounded-xl border border-red-900 px-4 py-2 text-sm text-red-400 transition hover:bg-red-950"
-  >
-    View Map
-  </Link>
-  <Link
-  to="/admin/kavus"
-  className="rounded-xl border border-red-900 px-4 py-2 text-sm text-red-400 transition hover:bg-red-950"
->
-  Manage Kavus
-</Link>
+            <Link
+              to="/"
+              className="rounded-xl border border-red-900 px-4 py-2 text-sm text-red-400 transition hover:bg-red-950"
+            >
+              View Map
+            </Link>
+            <Link
+              to="/admin/kavus"
+              className="rounded-xl border border-red-900 px-4 py-2 text-sm text-red-400 transition hover:bg-red-950"
+            >
+              Manage Kavus
+            </Link>
 
-  <button
-    type="button"
-    onClick={handleLogout}
-    className="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold transition hover:bg-red-800"
-  >
-    Logout
-  </button>
-</div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-xl bg-red-700 px-4 py-2 text-sm font-semibold transition hover:bg-red-800"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -242,9 +233,7 @@ const response = await fetch(`${API_URI}/kavus`, {
             <h2 className="text-xl font-bold">1. Kavu Information</h2>
 
             <div className="mt-5">
-              <label className="text-sm text-gray-300">
-                Kavu Name
-              </label>
+              <label className="text-sm text-gray-300">Kavu Name</label>
 
               <input
                 className={inputClass}
@@ -256,9 +245,7 @@ const response = await fetch(`${API_URI}/kavus`, {
             </div>
 
             <div className="mt-5">
-              <label className="text-sm text-gray-300">
-                District
-              </label>
+              <label className="text-sm text-gray-300">District</label>
 
               <select
                 className={inputClass}
@@ -281,9 +268,7 @@ const response = await fetch(`${API_URI}/kavus`, {
 
             <div className="mt-5 grid gap-5 md:grid-cols-2">
               <div>
-                <label className="text-sm text-gray-300">
-                  Latitude
-                </label>
+                <label className="text-sm text-gray-300">Latitude</label>
 
                 <input
                   className={inputClass}
@@ -299,9 +284,7 @@ const response = await fetch(`${API_URI}/kavus`, {
               </div>
 
               <div>
-                <label className="text-sm text-gray-300">
-                  Longitude
-                </label>
+                <label className="text-sm text-gray-300">Longitude</label>
 
                 <input
                   className={inputClass}
@@ -318,8 +301,8 @@ const response = await fetch(`${API_URI}/kavus`, {
             </div>
 
             <p className="mt-3 text-xs text-gray-500">
-              Enter the actual Kavu coordinates. You can obtain them from
-              Google Maps.
+              Enter the actual Kavu coordinates. You can obtain them from Google
+              Maps.
             </p>
           </section>
 
@@ -368,11 +351,7 @@ const response = await fetch(`${API_URI}/kavus`, {
                       className={inputClass}
                       value={event.festivalName}
                       onChange={(e) =>
-                        updateEvent(
-                          eventIndex,
-                          "festivalName",
-                          e.target.value
-                        )
+                        updateEvent(eventIndex, "festivalName", e.target.value)
                       }
                       placeholder="Enter festival name"
                       required
@@ -397,9 +376,7 @@ const response = await fetch(`${API_URI}/kavus`, {
 
                   <div className="mt-5">
                     <div className="flex items-center justify-between gap-3">
-                      <h4 className="font-semibold">
-                        Theyyam Performances
-                      </h4>
+                      <h4 className="font-semibold">Theyyam Performances</h4>
 
                       <button
                         type="button"
@@ -423,7 +400,7 @@ const response = await fetch(`${API_URI}/kavus`, {
                               updateTheyyam(
                                 eventIndex,
                                 theyyamIndex,
-                                e.target.value
+                                e.target.value,
                               )
                             }
                             placeholder="Enter Theyyam name"
